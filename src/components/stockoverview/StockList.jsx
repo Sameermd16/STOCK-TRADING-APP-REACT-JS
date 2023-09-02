@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import finnHub from "../../apis/finnHub"
 import { BiSolidUpArrow, BiSolidDownArrow } from 'react-icons/bi'
 
+import { AppContext } from "../../context/AppContext"
+
 export function StockList() {
 
-    const [watchList, setWatchList] = useState(['GOOGL', 'MSFT', 'AMZN'])
+    const { watchList, setWatchList } =  useContext(AppContext)
     const [stocks, setStocks] = useState([])
     // console.log(stocks)
 
