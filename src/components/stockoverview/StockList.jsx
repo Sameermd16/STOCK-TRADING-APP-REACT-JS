@@ -6,7 +6,7 @@ export function StockList() {
 
     const [watchList, setWatchList] = useState(['GOOGL', 'MSFT', 'AMZN'])
     const [stocks, setStocks] = useState([])
-    console.log(stocks)
+    // console.log(stocks)
 
     useEffect(() => {
         let isMounted = true 
@@ -64,8 +64,6 @@ export function StockList() {
             //         }
             //     })
             // )
-
-
             if(isMounted) {
                 const stockData = responses.map((item) => {
                     return (
