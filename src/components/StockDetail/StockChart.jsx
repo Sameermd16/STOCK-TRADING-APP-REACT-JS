@@ -9,6 +9,7 @@ export function StockChart({ chartData, symbol }) {
     console.log(dateFormat)
 
     const [companyProfile, setCompanyProfile] = useState([]) 
+    const { country, name, ipo, exchange, weburl, marketCapitalization, ticker, shareOutstanding, finnhubIndustry } = companyProfile
     console.log(companyProfile)
 
     useEffect(() => {
@@ -21,14 +22,17 @@ export function StockChart({ chartData, symbol }) {
                             symbol
                         }
                     })
-                    console.log(response)
+                    console.log(response.data)
+                    if(isMounted) {
+                        setCompanyProfile(response.data)
+                    }
                 } catch(error) {
 
                 }
         } 
         fetchCompanyProfile()
         return () => (isMounted = false) 
-    })
+    }, [symbol])
 
     const color = timeFormatter()[timeFormatter().length - 1].y - timeFormatter()[0].y > 0 ? '#26C281' : '#ed3419'
     console.log(color)
@@ -138,7 +142,43 @@ export function StockChart({ chartData, symbol }) {
                 </button>
             </div>
             <div>
-
+                {companyProfile && (
+                    <div className='row border bg-white rounded shadow-sm p-4 mt-5'>
+                        <div className="col">
+                            <div>
+                                <span className='fw-bold'> Name: {name} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>Country: {country} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>Ticker: {ticker} </span>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div>
+                                <span className='fw-bold'>Exchange: {exchange} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>Industry: {finnhubIndustry} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>IPO: {ipo} </span>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div>
+                                <span className='fw-bold'>MarketCap: {marketCapitalization} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>Shares Outstanding: {shareOutstanding} </span>
+                            </div>
+                            <div>
+                                <span className='fw-bold'>url: {weburl} </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     )
