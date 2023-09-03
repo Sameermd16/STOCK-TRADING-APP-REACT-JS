@@ -10,6 +10,8 @@ export function StockDetailPage() {
     const [chartData, setChartData] = useState()
     console.log(chartData)
 
+    const [loading, setLoading] = useState(false)
+
     // const params = useParams()
     // console.log(params)
     const { symbol } = useParams()
@@ -42,7 +44,7 @@ export function StockDetailPage() {
         return data.t.map((time, index) => {
             return ({
                 x: time * 1000,
-                y: data.c[index]
+                y: Math.floor(data.c[index]) 
             })
         })
     }
@@ -84,6 +86,7 @@ export function StockDetailPage() {
             //         to: currentTime
             //     }
             // })
+            setLoading(true)
             try {
                 const responses = await Promise.all([
                     finnHub.get('stock/candle?', {
@@ -126,7 +129,7 @@ export function StockDetailPage() {
                     month: formatData(responses[2].data),
                     year: formatData(responses[3].data)
                 })
-                
+                setLoading(false)
             } catch(error) {
 
             }
@@ -134,10 +137,14 @@ export function StockDetailPage() {
         fetchData()
     }, [symbol])
 
+    if(loading) {
+        return <h1>Loading...</h1>
+    }
+
     return (
         <div>
             {chartData && (
-                <StockChart />
+                <StockChart chartData={chartData} symbol={symbol} />
             )}
         </div>
     )

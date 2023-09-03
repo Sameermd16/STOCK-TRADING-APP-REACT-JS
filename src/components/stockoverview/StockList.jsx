@@ -8,8 +8,10 @@ import { useNavigate } from "react-router-dom"
 export function StockList() {
 
     const { watchList, setWatchList } =  useContext(AppContext)
+    console.log(watchList)
     const [stocks, setStocks] = useState([])
     // console.log(stocks)
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
     // console.log(navigate)
@@ -23,6 +25,7 @@ export function StockList() {
     async function getData(isMounted) {
         // const responses = []
         //loading state true
+        setLoading(true)
         try{
             const responses = await Promise.all(
                 watchList.map((item) => {
@@ -81,9 +84,10 @@ export function StockList() {
                     )
                 })
                 setStocks(stockData)
+                setLoading(false)
             }
         }catch(error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 
@@ -96,14 +100,18 @@ export function StockList() {
     }
 
     function deleteStock(symbol) {
-        const newStocks = stocks.filter((item) => {
-            return item.symbol !== symbol
+        const newStocks = watchList.filter((item) => {
+            return item !== symbol
         })
-        setStocks(newStocks)
+        setWatchList(newStocks)
     }
 
     function stockDetailsSelect(symbol) {
         navigate(`detail/${symbol}`)
+    }
+
+    if(loading) {
+        return <h1>Loading...</h1>
     }
 
     return (
@@ -138,8 +146,11 @@ export function StockList() {
                                     <td> {item.data.h} </td>
                                     <td> {item.data.l} </td>
                                     <td> {item.data.o} </td>
-                                    <td> {item.data.pc} </td>
-                                    {/* <button className='btn btn-danger btn-sm' onClick={() => deleteStock(item.symbol)}>delete</button> */}
+                                    <td> {item.data.pc} <button className='btn btn-danger btn-sm delete-button' onClick={(e) => {
+                                        e.stopPropagation()
+                                        deleteStock(item.symbol)
+                                    }}>delete</button> </td>
+                                    
                                 </tr>
                             )
                         })
