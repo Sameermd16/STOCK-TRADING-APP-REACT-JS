@@ -3,6 +3,7 @@ import finnHub from "../../apis/finnHub"
 import { BiSolidUpArrow, BiSolidDownArrow } from 'react-icons/bi'
 
 import { AppContext } from "../../context/AppContext"
+import { useNavigate } from "react-router-dom"
 
 export function StockList() {
 
@@ -10,11 +11,14 @@ export function StockList() {
     const [stocks, setStocks] = useState([])
     // console.log(stocks)
 
+    const navigate = useNavigate()
+    // console.log(navigate)
+
     useEffect(() => {
         let isMounted = true 
         getData(isMounted)
         return () => (isMounted = false)
-    }, [])
+    }, [watchList])
 
     async function getData(isMounted) {
         // const responses = []
@@ -29,6 +33,7 @@ export function StockList() {
                     })
                 })
             )
+            console.log(responses)
             // const response1 = await finnHub.get("/quote?", {
             //     params: {
             //         symbol: "MSFT"
@@ -90,6 +95,17 @@ export function StockList() {
         return number > 0 ? <BiSolidUpArrow /> : <BiSolidDownArrow />
     }
 
+    function deleteStock(symbol) {
+        const newStocks = stocks.filter((item) => {
+            return item.symbol !== symbol
+        })
+        setStocks(newStocks)
+    }
+
+    function stockDetailsSelect(symbol) {
+        navigate(`detail/${symbol}`)
+    }
+
     return (
         <div>
             <table className='table table-hover mt-5'>
@@ -109,7 +125,12 @@ export function StockList() {
                     {
                         stocks.map((item, index) => {
                             return (
-                                <tr className='table-row' key={index}>
+                                <tr 
+                                    className='table-row' 
+                                    key={index} 
+                                    onClick={() => stockDetailsSelect(item.symbol)}
+                                    style={{cursor: 'pointer'}}
+                                >
                                     <th scope='row'> {item.symbol} </th>
                                     <td> {item.data.c} </td>
                                     <td className={`text-${changeColor(item.data.d)}`}> {item.data.d} {changeArrow(item.data.d)} </td>
@@ -118,11 +139,13 @@ export function StockList() {
                                     <td> {item.data.l} </td>
                                     <td> {item.data.o} </td>
                                     <td> {item.data.pc} </td>
+                                    {/* <button className='btn btn-danger btn-sm' onClick={() => deleteStock(item.symbol)}>delete</button> */}
                                 </tr>
                             )
                         })
                     }
                 </tbody>
+                
             </table>
         </div>
     )

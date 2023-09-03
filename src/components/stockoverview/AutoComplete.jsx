@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import finnHub from "../../apis/finnHub"
+import { AppContext } from "../../context/AppContext"
 
 export function AutoComplete() {
 
@@ -7,6 +8,9 @@ export function AutoComplete() {
     // console.log(input)
     const [results, setResults] = useState([])
     console.log(results)
+
+    const { watchList, setWatchList } = useContext(AppContext)
+    console.log(watchList)
 
     useEffect(() => {
         // console.log('effect ran')
@@ -38,11 +42,11 @@ export function AutoComplete() {
         }
     }
 
-    // function addToStockList(symbol) {
-    //     setWatchList((prevArray) => {
-    //         [...prevArray, symbol]
-    //     })
-    // }
+    function addToStockList(symbol) {
+        if(watchList.indexOf(symbol) === - 1) {
+            setWatchList([...watchList, symbol])
+        }
+    }
 
     return (
         <div className='w-50 p-5 rounded mx-auto'>
@@ -67,7 +71,10 @@ export function AutoComplete() {
                             const { description, symbol } = item
                             return (
                                 <li key={index} className='dropdown-item'
-                                    // onClick={addToWatchList(symbol)}
+                                    onClick={() => {
+                                        addToStockList(symbol)
+                                        setInput('')
+                                    }}
                                 > 
                                     {description}
                                     ({symbol}) 
