@@ -57,7 +57,6 @@ export function StockChart({ chartData, symbol }) {
                 datetimeUTC: false
             }
         },
-
         colors: [color]
         // tooltip: {
         //     x: {

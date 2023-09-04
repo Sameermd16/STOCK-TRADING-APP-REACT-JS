@@ -16,6 +16,7 @@ export function StockList() {
     const navigate = useNavigate()
     // console.log(navigate)
 
+
     useEffect(() => {
         let isMounted = true 
         getData(isMounted)
